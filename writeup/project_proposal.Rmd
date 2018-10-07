@@ -1,5 +1,5 @@
 ---
-title: "Replication of Racial Progress as Threat to the Status Hierarhcy: Implications for Perceptiosn of Anti-White Bias by Wilkins & Kaiser (2014, Psychological Science)"
+title: "Replication of Racial Progress as Threat to the Status Hierarhcy: Implications for Perceptions of Anti-White Bias by Wilkins & Kaiser (2014, Psychological Science)"
 author: "Ellen Reinhart (ereinhar@stanford.edu)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
@@ -14,12 +14,26 @@ output:
 
 ##Introduction
 
-[No abstract is needed.]  Each replication project will have a straightforward, no frills report of the study and results.  These reports will be publicly available as supplementary material for the aggregate report(s) of the project as a whole.  Also, to maximize project integrity, the intro and methods will be written and critiqued in advance of data collection.  Introductions can be just 1-2 paragraphs clarifying the main idea of the original study, the target finding for replication, and any other essential information.  It will NOT have a literature review -- that is in the original publication. You can write both the introduction and the methods in past tense.  
+###Original Paper
+[Wilkins, C. L., & Kaiser, C. R. (2014). Racial progress as threat to the status hierarchy: Implications for perceptions of anti-White bias. *Psychological Science, 25*(2). https://doi.org/10.1177/0956797613508412](https://github.com/ecreinhart/wilkins2014/blob/master/original_paper/wilkins_kaiser_2014.pdf)
+
+###Repository
+[Wilkins & Kaiser (2014) study 2 replication](https://github.com/ecreinhart/wilkins2014)
+
+###Justification
+
+In my research program, I aim to understand how perceptions of inequality impact support for equality-promoting policies. The primary goal of my research is to understand how those with high status and in positions of power perceive inequality and become motivated to address it rather than perpetuate unjust hierarchies. Wilkins and Kaiser (2014) found that priming White participants with racial progress threatened those who strongly support the status quo, causing them to cite more anti-White bias compared to participants who do not support the status quo or who were not primed with racial progress. 
+
+Replicating study 2 of Wilkins and Kiaser's study will provide me with the opportunity to use mock newspaper articles to manipulate perceptions of inequality and to use well-established scales for measuring status-legitimizing beliefs (Levin et al., 1998). Using this paradigm relates to my first year project, in which I intend to conduct a cross-cultural comparison of the relationship between perceived inequality and motivation to take social action. I hypothesize that cultural differences in status-legitimizing beliefs will impact perceptions of inequality and motivation to take social action. To test this hypothesis, I will manipulate perceptions of inequality, using a similar paradigm to Wilkins and Kaiser's study. 
 
 
 ##Methods
 
+White participants will be recruited from Amazon Mechanical Turk and randomly assigned to one of two conditions: 1) racial progress or 2) control. In the racial progress condition, participants will read a news article about racial minorities in high-status positions. In the control condition, participants will read a news article about a low-ranked swim team winning a championship. After reading the article, participants will complete measures of racial progress, system-legitimizing beliefs, anti-White bias, and demographics. Wilkins posted the racial progres and control news articles on her personal website along with the exact wording and formatting of the measures used in the study ([see reserach materials here](http://silab.research.wesleyan.edu/research-materials/), which will allow for a very close replication. 
 
+###Challenges 
+
+I am familiar with Qualtircs and confident I can execute the study protocol. The news articles will need to be updated (e.g., article publication date, date by which race may not be a marker of status in the United States), but the content will remain the same.  One important change to note is that the sociopolitical climate has changed since the original study was run in 2014, which may impaact the results of the replciation. Regardless of whether the results replicate, the outcome will be informative. 
 
 ###Power Analysis
 
