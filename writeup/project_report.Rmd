@@ -1,0 +1,145 @@
+---
+title: 'Replication of Racial Progress as Threat to the Status Hierarchy: Implications
+  for Perceptions of Anti-White Bias by Wilkins & Kaiser (2014, Psychological Science)'
+author: "Ellen Reinhart (ereinhar@stanford.edu)"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+<!-- Replication reports should all use this template to standardize reporting across projects.  These reports will be public supplementary materials that accompany the summary report(s) of the aggregate results. -->
+
+##Introduction
+
+###Original Paper
+[Wilkins, C. L., & Kaiser, C. R. (2014). Racial progress as threat to the status hierarchy: Implications for perceptions of anti-White bias. *Psychological Science, 25*(2). https://doi.org/10.1177/0956797613508412](https://github.com/ecreinhart/wilkins2014/tree/master/original_paper)
+
+###Repository
+[Wilkins & Kaiser (2014) study 2 replication](https://github.com/ecreinhart/wilkins2014)
+
+###Online survey
+[Preview Qualtrics survey]("https://stanforduniversity.ca1.qualtrics.com/jfe/preview/SV_eyvQlTXQhqikcND?Q_SurveyVersionID=current&Q_CHL=preview")
+
+##Introduction
+Wilkins and Kaiser (2014) tested the effect of minority racial progress on perceptions of anti-White bias among White participants. In study two, the authors manipulated minority racial progress and found that status-legitimizing beliefs (SLB) moderate the effect of minority racial progress on perceptions of anti-White discrimination. In particular, participants who strongly endorse SLB and were randomly assigned to read an article about minority racial progress cited significantly more anti-White bias than high-SLB participants in the control condition. The focus of the current project is to replicate the finding in which high-SLBs moderate the effect of minority racial progress on perceptions of anti-White discrimination.  
+
+###Justification
+
+In my research program, I aim to understand how perceptions of inequality impact support for equality-promoting policies. One goal of my research is to understand how those with high status and in positions of power perceive inequality and become motivated to address it rather than perpetuate unjust hierarchies. Wilkins and Kaiser (2014) found that priming White participants with racial progress threatened those who strongly support the status quo, causing them to cite more anti-White bias compared to participants who did not support the status quo or who were not primed with racial progress. Replicating study 2 of Wilkins and Kaiser's study will provide me with the opportunity to use mock newspaper articles to manipulate perceptions of inequality and to use well-established scales for measuring status-legitimizing beliefs. For my first year project, I intend to conduct a cross-cultural comparison of the relationship between perceived inequality and motivation to take social action. I will manipulate perceptions of inequality, using a similar paradigm to Wilkins and Kaiser's study. 
+
+###Challenges 
+
+While I am new to programming, I am familiar with conducting surveys in Qualtrics and am confident I can execute the study protocol. The news articles will need to be updated (e.g., article publication date, date by which race may not be a marker of status in the United States), but the content will remain the same.  One important change to note is that the sociopolitical climate has shifted since the original study was run, which may impact the results of the replication. Regardless of whether the results replicate, the outcome will be informative. 
+
+##Methods
+
+White participants will be recruited from Amazon Mechanical Turk and randomly assigned to one of two conditions: racial progress or control. In the racial progress condition, participants will read a news article about racial minorities in high-status positions. In the control condition, participants will read a news article about a low-ranked swim team winning a championship. After reading the article, participants will complete measures of racial progress, system-legitimizing beliefs, anti-White bias, and demographics. Wilkins posted the racial progress and control news articles on her personal website along with the exact wording and formatting of the measures used in the study (see research materials on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/) or in the [replication repository](https://github.com/ecreinhart/wilkins2014/tree/master/original_paper)), which will allow for a very close replication. 
+
+###Power Analysis
+
+I will add power analysis results after we review how to conduct on Oct. 24. 
+[Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.]
+
+###Planned Sample
+
+168 White Americans (above 18 years of age) were recruited from Mechanical Turk by using a premium qualification for only White Mechanical Turk workers. 
+
+###Materials
+
+The materials described in the original paper or as described in detail on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/) were followed precisely unless otherwise noted. 
+
+As stated in the original paper, "All items were rated using scales from 1 (strongly disagree) to 7 (strongly agree)."
+
+####Manipulation
+
+The replication used the exact wording of the two articles in the original with three exceptions. The publication date of each article was changed from 2009 to 2018. The date cited as the time by which race will no longer be a marker of social status in the U.S. (in the treatment condition article) was changed from 2020 to 2030. The date by which the swim team was said to compete in the Olympics (in the control condition article) was changed from 2012 to 2020. 
+
+Participants answered the same follow-up distractor questions as used in the original paper after reading the article. Find the follow-up questions on the original materials posted on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/). 
+
+####Racial progress manipulation check 
+An item measuring participants’ agreement with the statement “Blacks in the U.S. are better off now (financially, politically, etc.) than they ever have been."" served as the manipulation check. 
+
+####Status-legitimizing beliefs
+
+"Participants completed Levin, Sidanius, Rabinowitz, and Federico’s (1998) 12-item SLB measure, which assesses individuals’ beliefs regarding system legitimacy, or the perception that the system is fair (example item: “America is a just society where differences in status between ethnic groups reflect actual group differences”); system permeability, or the perception that all individuals, regardless of ethnicity, can achieve social advancement (example item: “America is an open society where individuals of any ethnicity can achieve higher status”); and Protestant work ethic, or the idea that hard work is rewarded (example item: “If people work hard they almost always get what they want”). We averaged these items and used the composite score in our analyses because the separate subscales functioned similarly across analyses (also see O’Brien & Major, 2005). Together, our SLB items assess the extent to which individuals believe that the system is fair and legitimate."
+
+####Perceptions of anti-White bias 
+
+"We used eight items to assess perceptions of anti-White bias: (a) “Prejudice and discrimination against Whites are on the rise,” (b) “Whites are victims of racial bias,” (c) “Whites do not experience racism” (reverse-scored), (d) “Whites experience discrimination from Blacks,” (e) “Whites experience discrimination from other Whites,” (f) “Blacks and other racial groups benefit from preferential treatment that disadvantages Whites,” (g) “Reverse racism (where racial minorities are favored over Whites) is pervasive,” and (h) “Only racial minorities experience negative outcomes based on their race” (reverse-scored)."
+
+###Procedure	
+
+The procedures described in the original articled were followed precisely. "Participants were told that they would be participating in two separate studies. The “first study” was described as an examination of reactions to news articles. Participants were randomly assigned to read one of two articles. In the racial-progress condition, participants read about high-status racial minorities in traditionally White positions (e.g., Barack Obama, Condoleezza Rice) and further read that social mobility is generalized to racial minorities in the United States (e.g., progress in college enrollment and income). In the control condition, participants read about an underdog swim team winning the national championship. This control article mirrored the racial-progress article in that it was about a low-status group becoming a higher-status group. Participants completed questions that tested their memory of the articles. The “second study” was described as an examination of perceptions of society. This portion of the procedure contained the measure of anti-White bias and a manipulation check." "Participants then reported their endorsement of SLBs and demographic information."
+
+###Analysis Plan
+
+Participants who randomly clicked through the survey were removed. 
+
+"Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
+
+**The key analysis of interest is testing an interaction between status-legitimizing beliefs (SLB) and condition on perceptions of anti-White bias.**
+
+To test whether the manipulation was effective, a t-test was also conducted for condition differences in perceptions of racial progress. 
+
+###Differences from Original Study
+
+The sample, materials, and procedure exactly match the original study. One important difference is that the sociopolitical culture has changed since the original data was collected in 2009. Hate crimes rates in the United States have risen in recent years ([see BBC report on the increase](https://www.bbc.com/news/world-us-canada-41975573) and [FBI hate crime data](https://ucr.fbi.gov/hate-crime/2016)). I predict that increased racial tension in the United States will lead White American participants to feel more status threat, such that participants with high-SLB will cite more anti-White bias after reading about racial progress (i.e., the effect will be stronger). 
+
+<!-- ### Methods Addendum (Post Data Collection)
+
+You can comment this section out prior to final report with data collection. 
+
+#### Actual Sample
+  Sample size, demographics, data exclusions based on rules spelled out in analysis plan
+
+#### Differences from pre-data collection methods plan
+  Any differences from what was described as the original plan, or “none”. !-->
+
+
+##Results
+
+
+### Data preparation
+
+Data preparation following the analysis plan. 
+	
+```{r include=F}
+###Data Preparationl; identify participants who cliked through the survey (waiting to hear original author's creiteria for this exclusion) 
+
+####Load Relevant Libraries and Functions
+
+####Import data
+
+#### Data exclusion / filtering: exclude participants who clicked through survey 
+
+#### Prepare data for analysis - create columns etc.
+```
+
+### Confirmatory analysis
+
+The analyses as specified in the analysis plan. 
+
+"Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
+
+*Side-by-side graph with original graph is ideal here*
+
+###Exploratory analyses
+
+Any follow-up analyses desired (not required).  
+
+## Discussion
+
+### Summary of Replication Attempt
+
+Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+
+### Commentary
+
+Add open-ended commentary (if any) reflecting (a) insights from follow-up exploratory analysis, (b) assessment of the meaning of the replication (or not) - e.g., for a failure to replicate, are the differences between original and present study ones that definitely, plausibly, or are unlikely to have been moderators of the result, and (c) discussion of any objections or challenges raised by the current and original authors about the replication attempt.  None of these need to be long.
