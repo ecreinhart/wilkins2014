@@ -33,7 +33,7 @@ Wilkins and Kaiser (2014) tested the effect of minority racial progress on perce
 
 ##Methods
 
-White participants will be recruited from Amazon Mechanical Turk and randomly assigned to one of two conditions: racial progress or control. In the racial progress condition, participants will read a news article about racial minorities in high-status positions. In the control condition, participants will read a news article about a low-ranked swim team winning a championship. After reading the article, participants will complete measures of racial progress, system-legitimizing beliefs, anti-White bias, and demographics. Wilkins posted the racial progress and control news articles on her personal website along with the exact wording and formatting of the measures used in the study (see research materials on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/) or in the [replication repository](https://github.com/ecreinhart/wilkins2014/tree/master/original_paper)), which will allow for a very close replication. 
+White participants will be recruited from Amazon Mechanical Turk and randomly assigned to one of two conditions: racial progress or control. In the racial progress condition, participants will read a news article about racial minorities in high-status positions. In the control condition, participants will read a news article about a low-ranked swim team winning a championship. After reading the article, participants will complete measures of racial progress, system-legitimizing beliefs, anti-White bias, and demographics. Wilkins posted the racial progress and control news articles on her personal website along with the exact wording and formatting of the measures used in the study (see research materials on [Wilkins' website](https://sites.wustl.edu/spia/research-materials/) or in the [replication repository](https://github.com/ecreinhart/wilkins2014/tree/master/original_paper)), which will allow for a very close replication. 
 
 ###Power Analysis
 
@@ -46,7 +46,7 @@ I will add power analysis results after we review how to conduct on Oct. 24.
 
 ###Materials
 
-The materials described in the original paper or as described in detail on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/) were followed precisely unless otherwise noted. 
+The materials described in the original paper or as described in detail on [Wilkins' website](https://sites.wustl.edu/spia/research-materials/) were followed precisely unless otherwise noted. 
 
 As stated in the original paper, "All items were rated using scales from 1 (strongly disagree) to 7 (strongly agree)."
 
@@ -54,7 +54,7 @@ As stated in the original paper, "All items were rated using scales from 1 (stro
 
 The replication used the exact wording of the two articles in the original with three exceptions. The publication date of each article was changed from 2009 to 2018. The date cited as the time by which race will no longer be a marker of social status in the U.S. (in the treatment condition article) was changed from 2020 to 2030. The date by which the swim team was said to compete in the Olympics (in the control condition article) was changed from 2012 to 2020. 
 
-Participants answered the same follow-up distractor questions as used in the original paper after reading the article. Find the follow-up questions on the original materials posted on [Wilkins' website](http://silab.research.wesleyan.edu/research-materials/). 
+Participants answered the same follow-up distractor questions as used in the original paper after reading the article. Find the follow-up questions on the original materials posted on [Wilkins' website](https://sites.wustl.edu/spia/research-materials/). 
 
 ####Racial progress manipulation check 
 An item measuring participants’ agreement with the statement “Blacks in the U.S. are better off now (financially, politically, etc.) than they ever have been."" served as the manipulation check. 
@@ -70,6 +70,8 @@ An item measuring participants’ agreement with the statement “Blacks in the 
 ###Procedure	
 
 The procedures described in the original articled were followed precisely. "Participants were told that they would be participating in two separate studies. The “first study” was described as an examination of reactions to news articles. Participants were randomly assigned to read one of two articles. In the racial-progress condition, participants read about high-status racial minorities in traditionally White positions (e.g., Barack Obama, Condoleezza Rice) and further read that social mobility is generalized to racial minorities in the United States (e.g., progress in college enrollment and income). In the control condition, participants read about an underdog swim team winning the national championship. This control article mirrored the racial-progress article in that it was about a low-status group becoming a higher-status group. Participants completed questions that tested their memory of the articles. The “second study” was described as an examination of perceptions of society. This portion of the procedure contained the measure of anti-White bias and a manipulation check." "Participants then reported their endorsement of SLBs and demographic information."
+
+Demographic infomration will include gender, age, and race/ethnicity to check recruiting efforts of White participants.  
 
 ###Analysis Plan
 
@@ -104,15 +106,36 @@ You can comment this section out prior to final report with data collection.
 Data preparation following the analysis plan. 
 	
 ```{r include=F}
-###Data Preparationl; identify participants who cliked through the survey (waiting to hear original author's creiteria for this exclusion) 
+###Data Preparation; identify participants who cliked through the survey (waiting to hear original author's creiteria for this exclusion) 
 
-####Load Relevant Libraries and Functions
+#load pacakges 
+library(tidyr)
+library(dplyr)
+library(psych)
+library(car)
 
-####Import data
+#import data from Qualtrics, numeric values 
+#in Qualtrics, recode likert scales to be numeric only (not include "strongly disagree" or "strongly agree")
+wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 23, 2018_21.35.csv")
+
+#delete first two rows that are headers and not data ; do this command only once
+wilkins2014 <- wilkins2014[-1,]
+wilkins2014 <- wilkins2014[-1,]
+View(wilkins2014)
 
 #### Data exclusion / filtering: exclude participants who clicked through survey 
 
-#### Prepare data for analysis - create columns etc.
+#may need to covert variables to numeric? 
+
+#reverse score (3, 8) and composite anti-White bias 
+awb <- select(wilkins2014,awb_1:awb_8)
+View(awb)
+awb.comp <- composite(awb, R = c(3,8), rel = TRUE)
+
+wilkins2014 <- composite()
+
+#reverse score (3, 4, 7, 8, 11, 12) and composite status-legitimizing beliefs 
+
 ```
 
 ### Confirmatory analysis
@@ -121,11 +144,26 @@ The analyses as specified in the analysis plan.
 
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
+```{r}
+
+#hierarhcial linear regression 
+
+#reproduce the plot in the paper 
+
+```
+
+
 *Side-by-side graph with original graph is ideal here*
 
 ###Exploratory analyses
 
 Any follow-up analyses desired (not required).  
+```{r}
+#manipulation check of racial progress
+
+#check if all participants were White 
+
+```
 
 ## Discussion
 
