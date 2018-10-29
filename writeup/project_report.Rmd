@@ -112,7 +112,6 @@ Data preparation following the analysis plan.
 library(tidyr)
 library(dplyr)
 library(psych)
-library(car)
 
 #import data from Qualtrics, numeric values 
 wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
@@ -180,30 +179,13 @@ The analyses as specified in the analysis plan.
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
 ```{r}
-#I currently do not yet know how to run a hierarhcial linear regression in R, so I did a few other significance tests that provide some information about the hypothesis (e.g., is the effect of condition on anti-White bias different for a high-SLB sample vs low-SLB sample). I will continue researching how to do a hierarchial linear regression and plan to have the code ready next week. 
+#hierarhcial linear regression 
 
-#split mean SLB beliefs into above and below the mean 
-wilkins2014 <- wilkins2014 %>% 
-  mutate(slb_mean = mean(slb_composite)) %>% 
-  mutate(slb_split = ifelse(slb_composite > slb_mean,"H","L"))
-print(wilkins2014$slb_mean)
-View(wilkins2014)
+m1 <- lm(slb_center ~ condition, data=wilkins2014)
+summary(m1)
 
-#select high_SLB, run t.test for condition differences on awb
-wilkins2014_slb_high <- wilkins2014 %>% 
-  filter(slb_split == "H")
-View(wilkins2014_slb_high)
-slb_high_t <- t.test(wilkins2014_slb_high$awb_composite ~ wilkins2014_slb_high$condition)
-print(slb_high_t)
-
-#select low_SLB, run t.test for condition differences on awb 
-wilkins2014_slb_low <- wilkins2014 %>% 
-  filter(slb_split == "L")
-View(wilkins2014_slb_low)
-slb_low_t <- t.test(wilkins2014_slb_low$awb_composite ~ wilkins2014_slb_low$condition)
-print(slb_low_t)
-
-#hierarhcial linear regression will go here 
+m2 <- lm(awb_composite ~ condition*slb_center, data=wilkins2014)
+summary(m2) 
 
 #reproduce the plot in the paper will go here 
 
