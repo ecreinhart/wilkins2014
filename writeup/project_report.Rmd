@@ -75,7 +75,7 @@ Demographic infomration will include gender, age, and race/ethnicity to check re
 
 ###Analysis Plan
 
-Participants who randomly clicked through the survey were removed. 
+"Participants who randomly clicked through the survey were removed." 
 
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
@@ -106,7 +106,7 @@ You can comment this section out prior to final report with data collection.
 Data preparation following the analysis plan. 
 	
 ```{r include=F}
-###Data Preparation; identify participants who cliked through the survey (waiting to hear original author's creiteria for this exclusion) 
+###Data Preparation
 
 #load pacakges 
 library(tidyr)
@@ -115,26 +115,61 @@ library(psych)
 library(car)
 
 #import data from Qualtrics, numeric values 
-#in Qualtrics, recode likert scales to be numeric only (not include "strongly disagree" or "strongly agree")
-wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 23, 2018_21.35.csv")
+wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
 
-#delete first two rows that are headers and not data ; do this command only once
-wilkins2014 <- wilkins2014[-1,]
-wilkins2014 <- wilkins2014[-1,]
-View(wilkins2014)
+#delete first two rows that are headers and not data; select variables of interest 
+wilkins2014 <- wilkins2014[-(1:2),]
+wilkins2014 <- wilkins2014 %>% select(awb_1:condition)
 
-#### Data exclusion / filtering: exclude participants who clicked through survey 
+#### Data exclusion / filtering: exclude participants who clicked through survey; waiting to hear back from the author to see what criteria they used 
 
-#may need to covert variables to numeric? 
+#change to numeric variables 
 
+wilkins2014 <- wilkins2014 %>%  
+  mutate(awb_1 = as.numeric(as.character(awb_1))) %>%  
+  mutate(awb_2 = as.numeric(as.character(awb_2))) %>%  
+  mutate(awb_3 = as.numeric(as.character(awb_3))) %>%  
+  mutate(awb_4 = as.numeric(as.character(awb_4))) %>%  
+  mutate(awb_5 = as.numeric(as.character(awb_5))) %>%  
+  mutate(awb_6 = as.numeric(as.character(awb_6))) %>%  
+  mutate(awb_7 = as.numeric(as.character(awb_7))) %>%  
+  mutate(awb_8 = as.numeric(as.character(awb_8))) %>%  
+  mutate(rac_prog = as.numeric(as.character(rac_prog))) %>%
+  mutate(slb_1 = as.numeric(as.character(slb_1))) %>%  
+  mutate(slb_2 = as.numeric(as.character(slb_2))) %>%  
+  mutate(slb_3 = as.numeric(as.character(slb_3))) %>%  
+  mutate(slb_4 = as.numeric(as.character(slb_4))) %>%  
+  mutate(slb_5 = as.numeric(as.character(slb_5))) %>%  
+  mutate(slb_6 = as.numeric(as.character(slb_6))) %>%  
+  mutate(slb_7 = as.numeric(as.character(slb_7))) %>%  
+  mutate(slb_8 = as.numeric(as.character(slb_8))) %>%  
+  mutate(slb_9 = as.numeric(as.character(slb_9))) %>%  
+  mutate(slb_10 = as.numeric(as.character(slb_10))) %>%  
+  mutate(slb_11 = as.numeric(as.character(slb_11))) %>%  
+  mutate(slb_12 = as.numeric(as.character(slb_12)))
+  
 #reverse score (3, 8) and composite anti-White bias 
-awb <- select(wilkins2014,awb_1:awb_8)
-View(awb)
-awb.comp <- composite(awb, R = c(3,8), rel = TRUE)
-
-wilkins2014 <- composite()
+wilkins2014 <- wilkins2014 %>%  
+  mutate(awb_3 = 8-awb_3)  %>%
+  mutate(awb_8 = 8-awb_8) %>%
+  mutate(awb_composite = (awb_1 + awb_2 + awb_3 + awb_4 + awb_5 + awb_6 + awb_7 + awb_8)/8)
 
 #reverse score (3, 4, 7, 8, 11, 12) and composite status-legitimizing beliefs 
+wilkins2014 <- wilkins2014 %>% 
+  mutate(slb_3 = 8-slb_3)  %>%
+  mutate(slb_4 = 8-slb_4)  %>%
+  mutate(slb_7 = 8-slb_7)  %>%
+  mutate(slb_8 = 8-slb_8)  %>%
+  mutate(slb_11 = 8-slb_11) %>%
+  mutate(slb_12 = 8-slb_12) %>% 
+  mutate(slb_composite = (slb_1 + slb_2 +slb_3 + slb_4 + slb_5 + slb_6 + slb_7 + slb_8 + slb_9 + slb_10 + slb_11 + slb_12)/12)
+
+#mean-center SLB scores 
+wilkins2014 <- wilkins2014 %>%
+  mutate(slb_center = (scale(slb_composite, scale = FALSE)))
+
+#view data 
+View(wilkins2014)
 
 ```
 
@@ -145,13 +180,34 @@ The analyses as specified in the analysis plan.
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
 ```{r}
+#I currently do not yet know how to run a hierarhcial linear regression in R, so I did a few other significance tests that provide some information about the hypothesis (e.g., is the effect of condition on anti-White bias different for a high-SLB sample vs low-SLB sample). I will continue researching how to do a hierarchial linear regression and plan to have the code ready next week. 
 
-#hierarhcial linear regression 
+#split mean SLB beliefs into above and below the mean 
+wilkins2014 <- wilkins2014 %>% 
+  mutate(slb_mean = mean(slb_composite)) %>% 
+  mutate(slb_split = ifelse(slb_composite > slb_mean,"H","L"))
+print(wilkins2014$slb_mean)
+View(wilkins2014)
 
-#reproduce the plot in the paper 
+#select high_SLB, run t.test for condition differences on awb
+wilkins2014_slb_high <- wilkins2014 %>% 
+  filter(slb_split == "H")
+View(wilkins2014_slb_high)
+slb_high_t <- t.test(wilkins2014_slb_high$awb_composite ~ wilkins2014_slb_high$condition)
+print(slb_high_t)
+
+#select low_SLB, run t.test for condition differences on awb 
+wilkins2014_slb_low <- wilkins2014 %>% 
+  filter(slb_split == "L")
+View(wilkins2014_slb_low)
+slb_low_t <- t.test(wilkins2014_slb_low$awb_composite ~ wilkins2014_slb_low$condition)
+print(slb_low_t)
+
+#hierarhcial linear regression will go here 
+
+#reproduce the plot in the paper will go here 
 
 ```
-
 
 *Side-by-side graph with original graph is ideal here*
 
@@ -160,8 +216,11 @@ The analyses as specified in the analysis plan.
 Any follow-up analyses desired (not required).  
 ```{r}
 #manipulation check of racial progress
+manip_check <- t.test(wilkins2014$rac_prog ~ wilkins2014$condition)
+print(manip_check)
 
-#check if all participants were White 
+#check if all participants were White
+#create column that marks if anything except for "White" (coded as 5) was selected for "race"; summarize the variable to see how many cases; select out the cases and re-run stats, if needed 
 
 ```
 
