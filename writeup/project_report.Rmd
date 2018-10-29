@@ -180,7 +180,6 @@ The analyses as specified in the analysis plan.
 
 ```{r}
 #hierarhcial linear regression 
-
 m1 <- lm(slb_center ~ condition, data=wilkins2014)
 summary(m1)
 
