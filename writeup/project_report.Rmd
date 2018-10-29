@@ -180,10 +180,10 @@ The analyses as specified in the analysis plan.
 
 ```{r}
 #hierarhcial linear regression 
-m1 <- lm(slb_center ~ condition, data=wilkins2014)
+m1 <- lm(awb_composite ~ condition + slb_center, data=wilkins2014)
 summary(m1)
 
-m2 <- lm(awb_composite ~ condition*slb_center, data=wilkins2014)
+m2 <- lm(awb_composite ~ condition + slb_center + condition*slb_center, data=wilkins2014)
 summary(m2) 
 
 #reproduce the plot in the paper will go here 
