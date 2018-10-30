@@ -37,7 +37,7 @@ White participants will be recruited from Amazon Mechanical Turk and randomly as
 
 ###Power Analysis
 
-I will add power analysis results after we review how to conduct on Oct. 24. 
+I will add power analysis results after we review how to conduct one in class. 
 [Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.]
 
 ###Planned Sample
@@ -105,13 +105,14 @@ You can comment this section out prior to final report with data collection.
 
 Data preparation following the analysis plan. 
 	
-```{r include=F}
+```{r}
 ###Data Preparation
 
 #load pacakges 
 library(tidyr)
 library(dplyr)
 library(psych)
+library(knitr)
 
 #import data from Qualtrics, numeric values 
 wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
@@ -166,9 +167,6 @@ wilkins2014 <- wilkins2014 %>%
 #mean-center SLB scores 
 wilkins2014 <- wilkins2014 %>%
   mutate(slb_center = (scale(slb_composite, scale = FALSE)))
-
-#view data 
-View(wilkins2014)
 
 ```
 
