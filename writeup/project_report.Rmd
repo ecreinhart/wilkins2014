@@ -113,6 +113,7 @@ library(tidyr)
 library(dplyr)
 library(psych)
 library(knitr)
+library(ggplot2)
 
 #import data from Qualtrics, numeric values 
 wilkins2014 <- read.csv("wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
@@ -184,7 +185,13 @@ summary(m1)
 m2 <- lm(awb_composite ~ condition + slb_center + condition*slb_center, data=wilkins2014)
 summary(m2) 
 
-#reproduce the plot in the paper will go here 
+#plot of interaction
+
+wilkins2014 %>% 
+  ggplot() +
+  aes(x = slb_center, y = awb_composite, color = condition) +
+  geom_line(aes(group = condition)) +
+  geom_point()
 
 ```
 
