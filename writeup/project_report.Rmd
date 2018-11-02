@@ -126,38 +126,48 @@ wilkins2014 <- wilkins2014 %>% select(awb_1:condition)
 #tidy and change to numeric variables 
 wilkins2014 = wilkins2014 %>% 
   gather("measurement", "value", 
-         -rac_prog, -age, -gender, -race, -race_5_TEXT, -MID, -condition) %>% 
+         -rac_prog, -US, -age, -gender, -race, -race_5_TEXT, -MID, -condition) %>% 
   mutate(value = num(value)) %>% 
   separate (measurement,c("scale","item"), sep="_")
   
-#reverse score (3, 8) and composite anti-White bias 
+#reverse score anti-White bias (3, 8) and SLB (3, 4, 7, 8, 11, 12); composite each 
 wilkins2014 <- wilkins2014 %>%  
   mutate(value = ifelse(scale == "awb" & item == 3,
                         8- value,
                         value)) %>% 
   mutate(value = ifelse(scale == "awb" & item == 8,
                         8- value,
-                        value)) 
-
-
-  mutate(awb_8 = 8-awb_8) %>%
-    
-  mutate(awb_composite = (awb_1 + awb_2 + awb_3 + awb_4 + awb_5 + awb_6 + awb_7 + awb_8)/8)
-
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 3,
+                        8- value,
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 4,
+                        8- value,
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 7,
+                        8- value,
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 8,
+                        8- value,
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 11,
+                        8- value,
+                        value)) %>% 
+  mutate(value = ifelse(scale == "slb" & item == 12,
+                        8- value,
+                        value)) %>% 
+  group_by(MID,scale) %>% 
   
   
-  groupby(participant, scale)
-  summarize()
+  summarize(awb_composite = mean(value)) %>% 
   
-#reverse score (3, 4, 7, 8, 11, 12) and composite status-legitimizing beliefs 
-wilkins2014 <- wilkins2014 %>% 
-  mutate(slb_3 = 8-slb_3)  %>%
-  mutate(slb_4 = 8-slb_4)  %>%
-  mutate(slb_7 = 8-slb_7)  %>%
-  mutate(slb_8 = 8-slb_8)  %>%
-  mutate(slb_11 = 8-slb_11) %>%
-  mutate(slb_12 = 8-slb_12) %>% 
-  mutate(slb_composite = (slb_1 + slb_2 +slb_3 + slb_4 + slb_5 + slb_6 + slb_7 + slb_8 + slb_9 + slb_10 + slb_11 + slb_12)/12)
+  
+  
+  
+  summarize(slb_composite = mean)
+  ungroup()
+
+
 
 #mean-center SLB scores 
 wilkins2014 <- wilkins2014 %>%
@@ -172,7 +182,7 @@ The analyses as specified in the analysis plan.
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
 ```{r}
-#hierarhcial linear regression 
+#hierarhcial linear regression of interaction
 m2 <- lm(awb_composite ~ condition + slb_center + condition*slb_center, data=wilkins2014)
 summary(m2) 
 
@@ -181,7 +191,6 @@ summary(m2)
 wilkins2014 %>% 
   ggplot() +
   aes(x = slb_center, y = awb_composite, color = condition) +
-  geom_line(aes(group = condition)) +
   geom_point()
 
 ```
