@@ -288,7 +288,6 @@ wilkins2014 %>%
 
 ```
 
-
 ###Exploratory analyses
 
 Any follow-up analyses desired (not required).  
