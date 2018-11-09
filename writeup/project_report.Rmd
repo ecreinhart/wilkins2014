@@ -113,67 +113,45 @@ Data preparation following the analysis plan.
 #load pacakges 
 library(tidyverse)
 library(psych)
+library(ggthemes)
 char = as.character
 num = function(x) {return (as.numeric(char(x)))}
 
 #import data from Qualtrics, numeric values
-wilkins2014 <- read.csv("../data/wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
+wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
 
 #delete first two rows that are headers and not data; select variables of interest 
-wilkins2014 <- wilkins2014[-(1:2),]
-wilkins2014 <- wilkins2014 %>% select(awb_1:condition)
+wilkins2014_filtered <- wilkins2014_raw[-(1:2),]
+wilkins2014_selected <- wilkins2014_filtered %>% select(awb_1:condition)
 
 #### Data exclusion / filtering: exclude participants who clicked through survey; waiting to hear back from the author to see what criteria they used 
 
 #tidy and change to numeric variables 
-wilkins2014 = wilkins2014 %>% 
+wilkins2014_gathered = wilkins2014_selected %>% 
   gather("measurement", "value", 
          -rac_prog, -US, -age, -gender, -race, -race_5_TEXT, -MID, -condition) %>% 
   mutate(value = num(value)) %>% 
   separate (measurement,c("scale","item"), sep="_")
-  
+
 #reverse score anti-White bias (3, 8) and SLB (3, 4, 7, 8, 11, 12); composite each 
-wilkins2014 <- wilkins2014 %>%  
-  mutate(value = ifelse(scale == "awb" & item == 3,
+wilkins2014_reverse_coded <- wilkins2014_gathered %>%  
+  mutate(value = ifelse(scale == "awb" & item %in% c(3, 8),
                         8- value,
                         value)) %>% 
-  mutate(value = ifelse(scale == "awb" & item == 8,
+  mutate(value = ifelse(scale == "slb" & item %in% c(3, 4, 7, 8, 11, 12),
                         8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 3,
-                        8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 4,
-                        8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 7,
-                        8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 8,
-                        8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 11,
-                        8- value,
-                        value)) %>% 
-  mutate(value = ifelse(scale == "slb" & item == 12,
-                        8- value,
-                        value)) %>% 
-  group_by(MID,scale) %>% 
-  
-  
-  summarize(awb_composite = mean(value)) %>% 
-  
-  
-  
-  
-  summarize(slb_composite = mean)
+                        value))
+
+wilkins2014_composites = wilkins2014_reverse_coded %>% 
+  group_by(condition, MID, scale) %>% 
+  summarize(composite = mean(value)) %>%
   ungroup()
 
+wilkins2014_spread = wilkins2014_composites %>% 
+  spread(scale,composite)
 
-
-#mean-center SLB scores 
-wilkins2014 <- wilkins2014 %>%
-  mutate(slb_center = (scale(slb_composite, scale = FALSE)))
+wilkins2014_centered = wilkins2014_spread %>% 
+  mutate(slb_centered = (scale(slb, center = TRUE, scale = FALSE)))
 
 ```
 
@@ -185,17 +163,35 @@ The analyses as specified in the analysis plan.
 
 ```{r}
 #hierarhcial linear regression of interaction
-m2 <- lm(awb_composite ~ condition + slb_center + condition*slb_center, data=wilkins2014)
-summary(m2) 
+model <- lm(awb ~ condition + slb_centered + condition*slb_centered, data=wilkins2014_centered)
+summary(model) 
+str(model)
+str(summary(model))
+summary(model)$df
+model_coefs = summary(model)$coefficients
 
+model_coefs["conditiontreatment:slb_centered", "t value"]
+```
+
+
+```{r}
 #plot of interaction
 
-wilkins2014 %>% 
+most_extreme_x_value = 1.15*max(abs(wilkins2014_centered$slb_centered))
+
+wilkins2014_centered %>% 
   ggplot() +
-  aes(x = slb_center, y = awb_composite, color = condition) +
-  geom_point()
+  aes(x = slb_centered, y = awb, color = condition, linetype = condition) +
+  xlim(-most_extreme_x_value,most_extreme_x_value) +
+  ylim(0,7.5) +
+  geom_smooth(method="lm", se=FALSE) +
+  theme_few()+
+  scale_color_grey()+
+  ylab("Perceived Anti-White Bias")
+  
 
 ```
+
 
 *Side-by-side graph with original graph is ideal here*
 
