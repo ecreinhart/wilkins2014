@@ -101,13 +101,11 @@ You can comment this section out prior to final report with data collection.
 ##Results
 
 
-### Data preparation -- TIDY
+### Data preparation
 
 Data preparation following the analysis plan. 
 	
 ```{r}
-##TIDY 
-
 ###Data Preparation
 
 #load pacakges 
@@ -176,10 +174,14 @@ The analyses as specified in the analysis plan.
 
 ```{r}
 #linear regression of condition*SLB interaction
-
 model <- lm(awb ~ condition + slb_centered + condition*slb_centered, data=wilkins2014_centered)
 summary(model) 
+str(model)
+str(summary(model))
+summary(model)$df
+model_coefs = summary(model)$coefficients
 
+model_coefs["conditiontreatment:slb_centered", "t value"]
 ```
 
 
@@ -199,7 +201,6 @@ wilkins2014_centered %>%
   xlab("SLB Endorsement")+
   ylab("Perceived Anti-White Bias")
   
-
 ```
 
 
@@ -211,8 +212,10 @@ wilkins2014_centered %>%
 
 Any follow-up analyses desired (not required).  
 ```{r}
+
 #manipulation check of racial progress
-manip_check <- t.test(wilkins2014$rac_prog ~ wilkins2014$condition)
+
+manip_check <- t.test(wilkins2014_id$rac_prog ~ wilkins2014_d$condition)
 print(manip_check)
 
 ```
