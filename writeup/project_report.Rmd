@@ -117,20 +117,32 @@ library(ggthemes)
 char = as.character
 num = function(x) {return (as.numeric(char(x)))}
 
-#import data from Qualtrics, numeric values
-wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_October 29, 2018_00.10.csv")
+#import anonymized data from Qualtrics, numeric values
+wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_November 28, 2018_21.54.csv") 
 
-#delete first two rows that are headers and not data; select variables of interest 
+#remove first two rows that are headers and not data
 wilkins2014_filtered <- wilkins2014_raw[-(1:2),]
-wilkins2014_selected <- wilkins2014_filtered
-#wilkins2014_selected <- wilkins2014_filtered %>% select(awb_1:condition)
 
-#### Data exclusion / filtering: exclude participants who clicked through survey; waiting to hear back from the author to see what criteria they used 
+#select variables of interest 
+wilkins2014_selected <- wilkins2014_filtered %>% 
+  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2)
+
+#### Data exclusion / filtering  
+
+#exclusions
+wilkins2014_excluded <- wilkins2014_selected %>% 
+  filter(race == 5, #filter White participants only 
+         attn_check_1 == 7, #select if followed attn check instructing select "7, strongly agree"
+         !is.na(attn_check_2)) #select if followed attn check instructing "do not select a response"
+
+#add arbitrary participant ID
+wilkins2014_id <- wilkins2014_excluded %>% 
+  rowid_to_column("ID")
 
 #tidy and change to numeric variables 
-wilkins2014_gathered = wilkins2014_selected %>% 
+wilkins2014_gathered = wilkins2014_id %>% 
   gather("measurement", "value", 
-         -rac_prog, -US, -age, -gender, -race, -race_5_TEXT, -MID, -condition) %>% 
+         -ID, -condition, -rac_prog, -race, -attn_check_1, -attn_check_2) %>% 
   mutate(value = num(value)) %>% 
   separate (measurement,c("scale","item"), sep="_")
 
@@ -144,7 +156,7 @@ wilkins2014_reverse_coded <- wilkins2014_gathered %>%
                         value))
 
 wilkins2014_composites = wilkins2014_reverse_coded %>% 
-  group_by(condition, MID, scale) %>% 
+  group_by(condition, ID, scale) %>% 
   summarize(composite = mean(value)) %>%
   ungroup()
 
@@ -163,20 +175,16 @@ The analyses as specified in the analysis plan.
 "Mean-centered SLB scores and condition (0 = control, 1 = racial progress) were entered in Step 1 of a hierarchical linear regression. The two-way interaction between SLB and condition was entered in Step 2. In order to examine whether there were differences between conditions for individuals high and low in SLB endorsement, we tested the effects of condition for participants whose levels of SLB endorsement were high (1 SD above the centered mean) and low (1 SD below the centered mean; Cohen et al., 2003). Additionally, we examined simple slopes to determine whether SLB endorsement was related to anti-White bias within each condition."
 
 ```{r}
-#hierarhcial linear regression of interaction
+#linear regression of condition*SLB interaction
+
 model <- lm(awb ~ condition + slb_centered + condition*slb_centered, data=wilkins2014_centered)
 summary(model) 
-str(model)
-str(summary(model))
-summary(model)$df
-model_coefs = summary(model)$coefficients
 
-model_coefs["conditiontreatment:slb_centered", "t value"]
 ```
 
 
 ```{r}
-#plot of interaction
+#plot of condition*SLB interaction
 
 most_extreme_x_value = 1.15*max(abs(wilkins2014_centered$slb_centered))
 
@@ -188,13 +196,14 @@ wilkins2014_centered %>%
   geom_smooth(method="lm", se=FALSE) +
   theme_few()+
   scale_color_grey()+
+  xlab("SLB Endorsement")+
   ylab("Perceived Anti-White Bias")
   
 
 ```
 
 
-*Side-by-side graph with original graph is ideal here*
+![Figure 2 from Wilkins 2014 study 2 showing interaction between condition and SLB endorsement on perceived anti-White bias](../original_paper/wilkins2014_study2_figure2.png)
 
 ```
 
@@ -205,13 +214,6 @@ Any follow-up analyses desired (not required).
 #manipulation check of racial progress
 manip_check <- t.test(wilkins2014$rac_prog ~ wilkins2014$condition)
 print(manip_check)
-
-#check if all participants were White
-#create column that marks if anything except for "White" (coded as 5) was selected for "race"; summarize the variable to see how many cases; select out the cases and re-run stats, if needed 
-
-#model 1
-m1 <- lm(awb_composite ~ condition + slb_center, data=wilkins2014)
-summary(m1)
 
 ```
 
