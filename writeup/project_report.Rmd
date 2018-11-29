@@ -37,12 +37,24 @@ White participants will be recruited from Amazon Mechanical Turk and randomly as
 
 ###Power Analysis
 
-I will add power analysis results after we review how to conduct one in class. 
-[Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.]
+The paper cites the original effect size as b = 0.49. When converted, the effect size is d = 1.1289, f = .5645, and f^2 = 0.31866025. The regression model testing the interaction of SLB x condition has three predictors (condition, SLB, and condition x SLB). Setting alpha = .05 yields the following samples:
+
+![Gpower parameters for 80% power](../writeup/power_anaysis.png) 
+
+80% power: 39 </br>
+90% power: 49 </br>
+95% power: 58 </br>
+
+The large effect size allows a relatively small and feasible sample to have 80% power. 
 
 ###Planned Sample
 
-168 White Americans (above 18 years of age) were recruited from Mechanical Turk by using a premium qualification for only White Mechanical Turk workers. 
+39 White Americans (above 18 years of age) were recruited using Turk Prime to target only White Mechanical Turk workers. 
+
+Exclusion criteria were set based on Dr. Wilkins' instructions on exclusion criteria.
+
+"We excluded data from people who failed attention checks. For example, we asked:
+'Verify that you are reading carefully by selecting strongly agree.' - which was embedded in the SLB measures and 'Do not select any response for this question' embedded in anti-White bias measures.""
 
 ###Materials
 
@@ -116,31 +128,26 @@ char = as.character
 num = function(x) {return (as.numeric(char(x)))}
 
 #import anonymized data from Qualtrics, numeric values
-wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_November 28, 2018_21.54.csv") 
+wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_November 29, 2018_10.31_anonymized.csv") 
 
-#remove first two rows that are headers and not data
-wilkins2014_filtered <- wilkins2014_raw[-(1:2),]
-
-#select variables of interest 
-wilkins2014_selected <- wilkins2014_filtered %>% 
-  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2)
+#remove first two rows that are headers and the first 31 rows (through row 33) which are previews 
+wilkins2014_formatted <- wilkins2014_raw[-(1:33),] %>% 
+  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2) #select variables of interest 
 
 #### Data exclusion / filtering  
 
 #exclusions
-wilkins2014_excluded <- wilkins2014_selected %>% 
+wilkins2014_excluded <- wilkins2014_formatted %>% 
   filter(race == 5, #filter White participants only 
-         attn_check_1 == 7, #select if followed attn check instructing select "7, strongly agree"
-         !is.na(attn_check_2)) #select if followed attn check instructing "do not select a response"
-
-#add arbitrary participant ID
-wilkins2014_id <- wilkins2014_excluded %>% 
-  rowid_to_column("ID")
+         attn_check_1 == 7, #select if followed attn check instructing to select "7, strongly agree"
+        attn_check_2 == "") %>% #select if followed attn check instructing to not select a value 
+  rowid_to_column("ID") #add arbitrary participant ID
 
 #tidy and change to numeric variables 
-wilkins2014_gathered = wilkins2014_id %>% 
+wilkins2014_gathered = wilkins2014_excluded %>% 
+  select(ID,starts_with("slb_"),starts_with("awb_"),rac_prog,condition) %>% #select variables of interest 
   gather("measurement", "value", 
-         -ID, -condition, -rac_prog, -race, -attn_check_1, -attn_check_2) %>% 
+         -ID, -condition, -rac_prog) %>% 
   mutate(value = num(value)) %>% 
   separate (measurement,c("scale","item"), sep="_")
 
@@ -176,12 +183,11 @@ The analyses as specified in the analysis plan.
 #linear regression of condition*SLB interaction
 model <- lm(awb ~ condition + slb_centered + condition*slb_centered, data=wilkins2014_centered)
 summary(model) 
-str(model)
-str(summary(model))
-summary(model)$df
-model_coefs = summary(model)$coefficients
 
+#calculate condition*SLB coefficient 
+model_coefs = summary(model)$coefficients
 model_coefs["conditiontreatment:slb_centered", "t value"]
+
 ```
 
 
@@ -206,16 +212,19 @@ wilkins2014_centered %>%
 
 ![Figure 2 from Wilkins 2014 study 2 showing interaction between condition and SLB endorsement on perceived anti-White bias](../original_paper/wilkins2014_study2_figure2.png)
 
-```
-
 ###Exploratory analyses
 
 Any follow-up analyses desired (not required).  
 ```{r}
+#prep data for manipulation of condition on racial progress
+wilkins2014_manip_check <- wilkins2014_excluded %>% 
+  mutate(condition.n = ifelse(condition == "control",
+                              0,
+                              1)) %>% 
+   mutate(rac_prog = num(rac_prog))
 
-#manipulation check of racial progress
-
-manip_check <- t.test(wilkins2014_id$rac_prog ~ wilkins2014_d$condition)
+#manipulation check of condition on racial progress
+manip_check <- t.test(wilkins2014_manip_check$rac_prog ~ wilkins2014_manip_check$condition.n)
 print(manip_check)
 
 ```
