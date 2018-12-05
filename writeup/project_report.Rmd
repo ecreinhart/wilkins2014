@@ -130,7 +130,7 @@ ci <- function(x) {sem(x) * 1.96} # reasonable approximation
 sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(sum(!is.na((x))))}
 
 #import anonymized data from Qualtrics, numeric values
-wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_December 4, 2018_23.03_anonymized.csv") 
+wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_December 5, 2018_13.06_anonymized.csv") 
 
 #remove first two rows that are headers and the first 31 rows (through row 33) which are previews 
 wilkins2014_formatted <- wilkins2014_raw[-(1:50),] %>% 
@@ -299,6 +299,22 @@ AWB_mean = mean(wilkins2014_spread$awb, na.rm = TRUE)
 AWB_sd = SD(wilkins2014_spread$awb, na.rm = TRUE)
 print(AWB_mean)
 print(AWB_sd)
+
+```
+
+```{r}
+
+#visualizing interaction sa scatter plot to see each data point 
+
+wilkins2014_centered %>% 
+ggplot() +
+aes(x=slb_centered, y=awb, color=condition, linetype = condition) +
+         geom_point() +
+  geom_smooth(method=lm, 
+              se=TRUE) +
+  xlab("SLB Endorsement") +
+  ylab("Perceived Anti-White Bias") +
+  theme_few() 
 
 ```
 
