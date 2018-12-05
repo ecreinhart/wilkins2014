@@ -126,13 +126,15 @@ library(psych)
 library(ggthemes)
 char = as.character
 num = function(x) {return (as.numeric(char(x)))}
+ci <- function(x) {sem(x) * 1.96} # reasonable approximation 
+sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(sum(!is.na((x))))}
 
 #import anonymized data from Qualtrics, numeric values
-wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_November 29, 2018_10.31_anonymized.csv") 
+wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_December 4, 2018_23.03_anonymized.csv") 
 
 #remove first two rows that are headers and the first 31 rows (through row 33) which are previews 
-wilkins2014_formatted <- wilkins2014_raw[-(1:33),] %>% 
-  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2) #select variables of interest 
+wilkins2014_formatted <- wilkins2014_raw[-(1:50),] %>% 
+  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2,separate) #select variables of interest 
 
 #### Data exclusion / filtering  
 
@@ -141,7 +143,7 @@ wilkins2014_excluded <- wilkins2014_formatted %>%
   filter(race == 5, #filter White participants only 
          attn_check_1 == 7, #select if followed attn check instructing to select "7, strongly agree"
         attn_check_2 == "") %>% #select if followed attn check instructing to not select a value 
-  rowid_to_column("ID") #add arbitrary participant ID
+  rowid_to_column("ID")  #add arbitrary participant ID
 
 #tidy and change to numeric variables 
 wilkins2014_gathered = wilkins2014_excluded %>% 
@@ -196,7 +198,7 @@ model_coefs["conditiontreatment:slb_centered", "t value"]
 
 most_extreme_x_value = 1.15*max(abs(wilkins2014_centered$slb_centered))
 
-wilkins2014_centered %>% 
+interaction_plot <- wilkins2014_centered %>% 
   ggplot() +
   aes(x = slb_centered, y = awb, color = condition, linetype = condition) +
   xlim(-most_extreme_x_value,most_extreme_x_value) +
@@ -206,6 +208,8 @@ wilkins2014_centered %>%
   scale_color_grey()+
   xlab("SLB Endorsement")+
   ylab("Perceived Anti-White Bias")
+interaction_plot
+ggsave("interaction_plot.png", width=4, height=3)
   
 ```
 
@@ -227,7 +231,77 @@ wilkins2014_manip_check <- wilkins2014_excluded %>%
 manip_check <- t.test(wilkins2014_manip_check$rac_prog ~ wilkins2014_manip_check$condition.n)
 print(manip_check)
 
+#data prep for racial progress manipulation check plot 
+manip_check_plot_data <- wilkins2014_manip_check %>% 
+  select(ID,rac_prog,condition,rac_prog) %>% 
+  group_by(condition) %>% 
+  summarize(rac_prog_avg = mean(rac_prog),
+            ci=ci(rac_prog),
+            n=n()) 
+
+#plot manipulation check 
+manp_check_plot <- manip_check_plot_data %>% 
+  ggplot(aes(x=condition, y=rac_prog_avg)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  geom_errorbar(aes(ymin = rac_prog_avg - ci, 
+                    ymax = rac_prog_avg + ci), 
+                    width=.2,
+                    position=position_dodge(.9)) +
+  xlab("Condition") + 
+  ylab("Racial Progress") +
+  theme_few()
+manp_check_plot
+ggsave("manip_check_plot.png", width = 4, height = 3)
+
 ```
+
+```{r}
+
+#prep data for check on condition differences in believing separate studies
+wilkins2014_separate_check <- wilkins2014_excluded %>% 
+  mutate(condition.n = ifelse(condition == "control",
+                              0,
+                              1)) %>% 
+   mutate(separate = num(separate))
+
+#check on condition differences in believing separate studies
+separate_check <- t.test(wilkins2014_separate_check$separate ~ wilkins2014_separate_check$condition.n)
+print(separate_check)
+
+#plot separate studies check 
+separate_check_plot_data <- wilkins2014_separate_check %>% 
+  select(ID,separate,condition,separate) %>% 
+  group_by(condition) %>% 
+  summarize(separate_avg = mean(separate),
+            ci=ci(separate),
+            n=n()) 
+
+separate_check_plot <- separate_check_plot_data %>% 
+  ggplot(aes(x=condition, y=separate_avg)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  geom_errorbar(aes(ymin = separate_avg - ci, 
+                    ymax = separate_avg + ci), 
+                    width=.2,
+                    position=position_dodge(.9)) +
+  xlab("Condition") + 
+  ylab("Agree Separate Studies") +
+  theme_few()
+separate_check_plot
+ggsave("separate_check_plot.png", width = 4, height = 3)
+
+```
+
+```{r}
+
+#compare overall AWB scores to mean reported in original paper: "Perceptions of anti-White discrimination (α = .85; M = 4.21, SD = 1.12)"
+
+AWB_mean = mean(wilkins2014_spread$awb, na.rm = TRUE)
+AWB_sd = SD(wilkins2014_spread$awb, na.rm = TRUE)
+print(AWB_mean)
+print(AWB_sd)
+
+```
+
 
 ## Discussion
 
