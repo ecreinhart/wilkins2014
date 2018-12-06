@@ -99,15 +99,12 @@ To test whether the manipulation was effective, a t-test was also conducted for 
 
 The sample, materials, and procedure exactly match the original study. One important difference is that the sociopolitical culture has changed since the original data was collected in 2009. Hate crimes rates in the United States have risen in recent years ([see BBC report on the increase](https://www.bbc.com/news/world-us-canada-41975573) and [FBI hate crime data](https://ucr.fbi.gov/hate-crime/2016)). I predict that increased racial tension in the United States will lead White American participants to feel more status threat, such that participants with high-SLB will cite more anti-White bias after reading about racial progress (i.e., the effect will be stronger). 
 
-<!-- ### Methods Addendum (Post Data Collection)
-
-You can comment this section out prior to final report with data collection. 
 
 #### Actual Sample
   Sample size, demographics, data exclusions based on rules spelled out in analysis plan
 
 #### Differences from pre-data collection methods plan
-  Any differences from what was described as the original plan, or “none”. !-->
+  Any differences from what was described as the original plan, or “none”. 
 
 
 ##Results
