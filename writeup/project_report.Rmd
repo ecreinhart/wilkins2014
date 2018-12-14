@@ -24,8 +24,11 @@ output:
 ###Repository
 [Wilkins & Kaiser (2014) study 2 replication](https://github.com/ecreinhart/wilkins2014)
 
-###Online survey
+###Online Survey
 [Preview Qualtrics survey]("https://stanforduniversity.ca1.qualtrics.com/jfe/preview/SV_eyvQlTXQhqikcND?Q_SurveyVersionID=current&Q_CHL=preview")
+
+### OSF Pre-Registration 
+[Link to Pre-Registration]("https://osf.io/p79wz/register/564d31db8c5e4a7c9694b2c0")
 
 ##Introduction
 Wilkins and Kaiser (2014) tested the effect of minority racial progress on perceptions of anti-White bias among White participants. In study two, the authors manipulated minority racial progress and found that status-legitimizing beliefs (SLB) moderate the effect of minority racial progress on perceptions of anti-White discrimination. In particular, participants who strongly endorse SLB and were randomly assigned to read an article about minority racial progress cited significantly more anti-White bias than high-SLB participants in the control condition. The focus of the current project is to replicate the finding in which high-SLBs moderate the effect of minority racial progress on perceptions of anti-White discrimination.  
@@ -83,7 +86,7 @@ An item measuring participants’ agreement with the statement “Blacks in the 
 
 The procedures described in the original articled were followed precisely. "Participants were told that they would be participating in two separate studies. The “first study” was described as an examination of reactions to news articles. Participants were randomly assigned to read one of two articles. In the racial-progress condition, participants read about high-status racial minorities in traditionally White positions (e.g., Barack Obama, Condoleezza Rice) and further read that social mobility is generalized to racial minorities in the United States (e.g., progress in college enrollment and income). In the control condition, participants read about an underdog swim team winning the national championship. This control article mirrored the racial-progress article in that it was about a low-status group becoming a higher-status group. Participants completed questions that tested their memory of the articles. The “second study” was described as an examination of perceptions of society. This portion of the procedure contained the measure of anti-White bias and a manipulation check." "Participants then reported their endorsement of SLBs and demographic information."
 
-Demographic infomration will include gender, age, and race/ethnicity to check recruiting efforts of White participants.  
+Demographic information will include gender, age, and race/ethnicity to check recruiting efforts of White participants.  
 
 ###Analysis Plan
 
@@ -99,12 +102,16 @@ To test whether the manipulation was effective, a t-test was also conducted for 
 
 The sample, materials, and procedure exactly match the original study. One important difference is that the sociopolitical culture has changed since the original data was collected in 2009. Hate crimes rates in the United States have risen in recent years ([see BBC report on the increase](https://www.bbc.com/news/world-us-canada-41975573) and [FBI hate crime data](https://ucr.fbi.gov/hate-crime/2016)). I predict that increased racial tension in the United States will lead White American participants to feel more status threat, such that participants with high-SLB will cite more anti-White bias after reading about racial progress (i.e., the effect will be stronger). 
 
-
 #### Actual Sample
-  Sample size, demographics, data exclusions based on rules spelled out in analysis plan
+  Final sample N=37 after 2 participants were excluded based on pre-set exclusion criteria. </br>
+  70% men, 30% women</br>
+  Mean age = 34 years, SD = 8.86</br>
+  62% Democrats, 27% Republicans, 11% Independents </br>
+  Mean score on 7-point political ideology scale = 3.35 (SD = 1.72), between "3 - Somewhat Liberal" and "4 - Moderate"
+
 
 #### Differences from pre-data collection methods plan
-  Any differences from what was described as the original plan, or “none”. 
+  None.  
 
 
 ##Results
@@ -131,16 +138,55 @@ wilkins2014_raw <- read.csv("../data/wilkins & kaiser 2014 replication_December 
 
 #remove first two rows that are headers and the first 31 rows (through row 33) which are previews 
 wilkins2014_formatted <- wilkins2014_raw[-(1:50),] %>% 
-  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2,separate) #select variables of interest 
+  select(slb_1:slb_12,awb_1:awb_8,condition,rac_prog,race,attn_check_1,attn_check_2,separate,age,gender,pol_view,pol_party) #select variables of interest 
 
 #### Data exclusion / filtering  
 
+wilkins2014_formatted$gender = #rename codes for gender varible 
+  car::recode(wilkins2014_formatted$gender,"
+              '1' = 'man';
+              '2' = 'woman';
+              '3' = 'non-binary';
+              '4' = 'self-describe';
+              '5' = 'other'")
+
+wilkins2014_formatted$race = #rename codes for race varible 
+  car::recode(wilkins2014_formatted$race,"
+              '1' = 'Asian/Asian American';
+              '2' = 'Black/African American';
+              '3' = 'Latino/Latina';
+              '4' = 'Native American/Pacific Islander';
+              '5' = 'White/European American';
+              '6' = 'Other'")
+
+wilkins2014_formatted$pol_party = #rename codes for political party varible 
+  car::recode(wilkins2014_formatted$pol_party,"
+              '1' = 'Strong Democrat';
+              '2' = 'Democrat';
+              '3' = 'Leaning Democrat';
+              '4' = 'Independent';
+              '5' = 'Leaning Republican';
+              '6' = 'Republican';
+              '7' = 'Strong Republican'")
+
+wilkins2014_formatted$pol_party_collapsed = #collapse political party into Dem, Rep, Ind
+  car::recode(wilkins2014_formatted$pol_party,"
+              'Strong Democrat' = 'Democrat';
+              'Democrat' = 'Democrat';
+              'Leaning Democrat' = 'Democrat';
+              'Independent' = 'Independent';
+              'Leaning Republican' = 'Republican';
+              'Republican' = 'Republican';
+              'Strong Republican' = 'Republican'")
+
 #exclusions
 wilkins2014_excluded <- wilkins2014_formatted %>% 
-  filter(race == 5, #filter White participants only 
+  filter(race == "White/European American", #filter White participants only 
          attn_check_1 == 7, #select if followed attn check instructing to select "7, strongly agree"
         attn_check_2 == "") %>% #select if followed attn check instructing to not select a value 
-  rowid_to_column("ID")  #add arbitrary participant ID
+  rowid_to_column("ID") %>% #add arbitrary participant ID
+  mutate(age = num(age), #make demographic variables numeric 
+         pol_view = num(pol_view))
 
 #tidy and change to numeric variables 
 wilkins2014_gathered = wilkins2014_excluded %>% 
@@ -212,6 +258,37 @@ ggsave("interaction_plot.png", width=4, height=3)
 
 
 ![Figure 2 from Wilkins 2014 study 2 showing interaction between condition and SLB endorsement on perceived anti-White bias](../original_paper/wilkins2014_study2_figure2.png)
+
+```{r}
+
+#sample demographics 
+
+#total after exclusions
+nrow(wilkins2014_excluded)
+
+#age
+mean(wilkins2014_excluded$age)
+sd(wilkins2014_excluded$age)
+range(wilkins2014_excluded$age)
+
+#gender
+wilkins2014_excluded %>% 
+  group_by(gender) %>% 
+  summarize(count = n()) %>% 
+  mutate(percent_gender = count / nrow(wilkins2014_excluded) * 100)
+
+#political ideology 
+mean(wilkins2014_excluded$pol_view)
+sd(wilkins2014_excluded$pol_view)
+
+#political party 
+wilkins2014_excluded %>% 
+  group_by(pol_party_collapsed) %>% 
+  summarize(count = n()) %>% 
+  mutate(percent_party = count / nrow(wilkins2014_excluded) * 100)
+
+```
+
 
 ###Exploratory analyses
 
@@ -320,8 +397,26 @@ aes(x=slb_centered, y=awb, color=condition, linetype = condition) +
 
 ### Summary of Replication Attempt
 
-Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+This project did not replicate the primary confirmatory analyses of the interaction between status-legitimizing beliefs (SLB) and racial progress (as manipulated by condition) on perceptions of anti-White bias (AWB). The analyses did replicate the significant main effect of SLB on AWB such that those high in SLB cited more AWB than those with low SLB. The manipulation of racial progress was successful, as participants in the racial progress condition agreed more with the racial progress manipulation check compared to participants in the control condition. 
 
 ### Commentary
 
-Add open-ended commentary (if any) reflecting (a) insights from follow-up exploratory analysis, (b) assessment of the meaning of the replication (or not) - e.g., for a failure to replicate, are the differences between original and present study ones that definitely, plausibly, or are unlikely to have been moderators of the result, and (c) discussion of any objections or challenges raised by the current and original authors about the replication attempt.  None of these need to be long.
+When planning the replication, the original author expressed concerns cohort effects such that manipulating racial progress may be more difficult in 2018 than it was in 2009 when the original data were collected. I was similarly concerned, but the results show that the racial progress manipulation was successful, as mentioned above. 
+
+Before running the study, our team was also concerned that participants might not believe the cover story that the two studies were not related to each other. At the end of the survey, a statement reiterated that participants were told the survey was on two separate studies. Then, we asked participants if they agreed that the studies were separate. Exploratory analyses showed that participants in the racial progress condition believed less than participants in the control condition that the two studies were separate. If participants in the racial progress condition thought the studies were related, they may have experienced self-presentation concerns and therefore cited less anti-White bias. This may account for why the racial progress manipulation checked showed condition differences but there was no interaction between SLB and condition. Given that asking if the studies were related could be open to interpretation, a more nuanced assessment of whether participants' suspicion (e.g., progressive funnel debrief) would be helpful. 
+
+The replication had more Democrats than Republicans, which could have dampened the effect of racial progress and SLB on AWB. The original paper doesn't report the political ideology or party of the sample. 
+
+Given the changes in America over the last nine years, including a new President, there could be other cohort effects that our data don't speak to. 
+
+It's also possible that the original paper over-estimated the effect size of the interaction. If that were the case, this sample would not be adequately powered to detect the interaction between SLB and racial progress on AWB. To test this hypothesis, one could run the same paradigm with a much larger sample to determine if the interaction is significant. 
+
+
+
+
+
+
+
+
+
+
