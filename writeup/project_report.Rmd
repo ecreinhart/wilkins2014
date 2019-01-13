@@ -25,10 +25,10 @@ output:
 [Wilkins & Kaiser (2014) study 2 replication](https://github.com/ecreinhart/wilkins2014)
 
 ###Online Survey
-[Preview Qualtrics survey]("https://stanforduniversity.ca1.qualtrics.com/jfe/preview/SV_eyvQlTXQhqikcND?Q_SurveyVersionID=current&Q_CHL=preview")
+[Preview Qualtrics survey](https://stanforduniversity.ca1.qualtrics.com/jfe/preview/SV_eyvQlTXQhqikcND?Q_SurveyVersionID=current&Q_CHL=preview)
 
 ### OSF Pre-Registration 
-[Link to Pre-Registration]("https://osf.io/p79wz/register/564d31db8c5e4a7c9694b2c0")
+[Link to Pre-Registration](https://osf.io/p79wz/)
 
 ##Introduction
 Wilkins and Kaiser (2014) tested the effect of minority racial progress on perceptions of anti-White bias among White participants. In study two, the authors manipulated minority racial progress and found that status-legitimizing beliefs (SLB) moderate the effect of minority racial progress on perceptions of anti-White discrimination. In particular, participants who strongly endorse SLB and were randomly assigned to read an article about minority racial progress cited significantly more anti-White bias than high-SLB participants in the control condition. The focus of the current project is to replicate the finding in which high-SLBs moderate the effect of minority racial progress on perceptions of anti-White discrimination.  
@@ -42,7 +42,7 @@ White participants will be recruited from Amazon Mechanical Turk and randomly as
 
 The paper cites the original effect size as b = 0.49. When converted, the effect size is d = 1.1289, f = .5645, and f^2 = 0.31866025. The regression model testing the interaction of SLB x condition has three predictors (condition, SLB, and condition x SLB). Setting alpha = .05 yields the following samples:
 
-![Gpower parameters for 80% power](../writeup/power_anaysis.png) 
+![Gpower parameters for 80% power](../writeup/figures/power_anaysis.png) 
 
 80% power: 39 </br>
 90% power: 49 </br>
@@ -235,6 +235,8 @@ model_coefs["conditiontreatment:slb_centered", "t value"]
 
 ```
 
+Multiple regression analysis was used to test if racial progress condition, status-legitimizing beliefs (SLB), and their interaction predicted participants anti-White bias (AWB). The model predicts 38% of the variance (R^2 -= .38, *F*(3, 32) = 8.02, *p* < .001). SLB significantly predicts AWB (B = 2.68, *p* < .05). The results do not show a significant interaction between SLB and racial progress condition (B = -0.4067, *p* = .69). 
+
 
 ```{r}
 #plot of condition*SLB interaction
@@ -246,13 +248,13 @@ interaction_plot <- wilkins2014_centered %>%
   aes(x = slb_centered, y = awb, color = condition, linetype = condition) +
   xlim(-most_extreme_x_value,most_extreme_x_value) +
   ylim(0,7.5) +
-  geom_smooth(method="lm", se=FALSE) +
+  geom_smooth(method="lm", se=FALSE, na.rm=TRUE) +
   theme_few()+
   scale_color_grey()+
   xlab("SLB Endorsement")+
   ylab("Perceived Anti-White Bias")
 interaction_plot
-ggsave("interaction_plot.png", width=4, height=3)
+ggsave("../writeup/figures/interaction_plot.png", width=4, height=3)
   
 ```
 
@@ -292,7 +294,6 @@ wilkins2014_excluded %>%
 
 ###Exploratory analyses
 
-Any follow-up analyses desired (not required).  
 ```{r}
 #prep data for manipulation of condition on racial progress
 wilkins2014_manip_check <- wilkins2014_excluded %>% 
@@ -325,7 +326,7 @@ manp_check_plot <- manip_check_plot_data %>%
   ylab("Racial Progress") +
   theme_few()
 manp_check_plot
-ggsave("manip_check_plot.png", width = 4, height = 3)
+ggsave("../writeup/figures/manip_check_plot.png", width = 4, height = 3)
 
 ```
 
@@ -361,13 +362,13 @@ separate_check_plot <- separate_check_plot_data %>%
   ylab("Agree Separate Studies") +
   theme_few()
 separate_check_plot
-ggsave("separate_check_plot.png", width = 4, height = 3)
+ggsave("../writeup/figures/separate_check_plot.png", width = 4, height = 3)
 
 ```
 
 ```{r}
 
-#compare overall AWB scores to mean reported in original paper: "Perceptions of anti-White discrimination (α = .85; M = 4.21, SD = 1.12)"
+#compare overall AWB scores to mean reported in original paper: "Perceptions of anti-White discrimination (alpha = .85; M = 4.21, SD = 1.12)"
 
 AWB_mean = mean(wilkins2014_spread$awb, na.rm = TRUE)
 AWB_sd = SD(wilkins2014_spread$awb, na.rm = TRUE)
@@ -378,14 +379,15 @@ print(AWB_sd)
 
 ```{r}
 
-#visualizing interaction sa scatter plot to see each data point 
+#visualizing interaction scatter plot to see each data point 
 
 wilkins2014_centered %>% 
 ggplot() +
 aes(x=slb_centered, y=awb, color=condition, linetype = condition) +
-         geom_point() +
+         geom_point(na.rm = TRUE) +
   geom_smooth(method=lm, 
-              se=TRUE) +
+              se=TRUE,
+              na.rm = TRUE) +
   xlab("SLB Endorsement") +
   ylab("Perceived Anti-White Bias") +
   theme_few() 
